@@ -1055,30 +1055,30 @@ require('lazy').setup({
       -- Big file handling, quickfix enhancements, etc.
       words = { enabled = true },
     },
-  {
-    'sphamba/smear-cursor.nvim',
-    opts = {
-      -- Adjust these for faster/slower trails
-      cursor_color = '#ff8800',
-      stiffness = 0.6,               -- 0.1 to 1; higher is faster
-      trailing_stiffness = 0.3,
-      distance_stop_animating = 0.1, -- Minimum distance to stop animating
+    {
+      'sphamba/smear-cursor.nvim',
+      opts = {
+        -- Adjust these for faster/slower trails
+        cursor_color = '#ff8800',
+        stiffness = 0.6, -- 0.1 to 1; higher is faster
+        trailing_stiffness = 0.3,
+        distance_stop_animating = 0.1, -- Minimum distance to stop animating
+      },
     },
   },
-},
 
-{
-  'karb94/neoscroll.nvim',
-  config = function()
-    require('neoscroll').setup({
-      mappings = {'<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', '<C-e>', 'zt', 'zz', 'zb'},
-      hide_cursor = true,          -- Hide cursor while scrolling
-      stop_eof = true,             -- Stop at end of file
-      respect_scrolloff = false,   -- Stop scrolling when scrolloff reached
-      cursor_scroll_step = 1,      -- Step size when scrolling with dot
-    })
-  end
-},
+  {
+    'karb94/neoscroll.nvim',
+    config = function()
+      require('neoscroll').setup {
+        mappings = { '<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', '<C-e>', 'zt', 'zz', 'zb' },
+        hide_cursor = true, -- Hide cursor while scrolling
+        stop_eof = true, -- Stop at end of file
+        respect_scrolloff = false, -- Stop scrolling when scrolloff reached
+        cursor_scroll_step = 1, -- Step size when scrolling with dot
+      }
+    end,
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
