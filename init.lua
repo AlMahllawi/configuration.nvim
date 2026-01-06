@@ -468,7 +468,27 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      -- Porjects Integration
+      pcall(require('telescope').load_extension, 'projects')
+      vim.keymap.set('n', '<leader>sp', function()
+        require('telescope').extensions.projects.projects {}
+      end, { desc = '[S]earch [P]rojects' })
     end,
+  },
+  {
+    'stevearc/oil.nvim',
+    opts = {
+      -- Show file icons (requires Nerd Font)
+      view_options = { show_hidden = true },
+      -- Optional: Floating window instead of full screen
+      win_options = { winblend = 10 },
+    },
+    -- Shortcut to open Oil
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    keys = {
+      { '-', '<CMD>Oil<CR>', desc = 'Open parent directory' },
+    },
   },
 
   -- LSP Plugins
@@ -741,6 +761,25 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      }
+    end,
+  },
+
+  {
+    'ahmedkhalf/project.nvim',
+    config = function()
+      require('project_nvim').setup {
+        -- Detection methods (order matters)
+        -- lsp: uses the LSP root
+        -- pattern: looks for files like .git, Makefile, etc.
+        detection_methods = { 'lsp', 'pattern' },
+        patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'go.mod' },
+
+        -- Don't change directory for every file, only when switching projects
+        silent_chdir = true,
+
+        -- Where to store the project history
+        datapath = vim.fn.stdpath 'data',
       }
     end,
   },
