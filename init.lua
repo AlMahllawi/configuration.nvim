@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -799,12 +799,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
         opts = {},
       },
@@ -941,6 +941,7 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    lazy = true,
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
@@ -990,6 +991,46 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
+  {
+    'folke/snacks.nvim',
+    priority = 1000,
+    lazy = false,
+    opts = {
+      -- Smooth window opening/closing animations
+      animate = { enabled = true },
+      -- Beautiful dashboard when opening Neovim
+      dashboard = { enabled = true },
+      -- Smooth scrolling (alternative to neoscroll)
+      scroll = { enabled = true },
+      -- Scope (highlights the current indent/scope with animation)
+      scope = { enabled = true },
+      -- Big file handling, quickfix enhancements, etc.
+      words = { enabled = true },
+    },
+  {
+    'sphamba/smear-cursor.nvim',
+    opts = {
+      -- Adjust these for faster/slower trails
+      cursor_color = '#ff8800',
+      stiffness = 0.6,               -- 0.1 to 1; higher is faster
+      trailing_stiffness = 0.3,
+      distance_stop_animating = 0.1, -- Minimum distance to stop animating
+    },
+  },
+},
+
+{
+  'karb94/neoscroll.nvim',
+  config = function()
+    require('neoscroll').setup({
+      mappings = {'<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', '<C-e>', 'zt', 'zz', 'zb'},
+      hide_cursor = true,          -- Hide cursor while scrolling
+      stop_eof = true,             -- Stop at end of file
+      respect_scrolloff = false,   -- Stop scrolling when scrolloff reached
+      cursor_scroll_step = 1,      -- Step size when scrolling with dot
+    })
+  end
+},
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
