@@ -177,9 +177,14 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Open terminal
-vim.keymap.set('n', '<leader>T', function()
+vim.keymap.set('n', '<leader>Ti', function()
   vim.cmd.term()
-end, { desc = 'Open [T]erminal' })
+end, { desc = 'Open [T]erminal [I]ternally' })
+
+vim.keymap.set('n', '<leader>Te', function()
+  local cwd = vim.fn.getcwd()
+  vim.fn.jobstart({ 'kitty', '--detach', '--directory', cwd }, { detach = true })
+end, { desc = 'Open [T]erminal [E]xternally' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
