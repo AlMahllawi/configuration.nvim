@@ -353,6 +353,7 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
+        { '<leader>d', group = '[D]ebug' },
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
@@ -700,7 +701,9 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {
+          cmd = { 'clangd', '--background-index', '--clang-tidy', '--completion-style=detailed', '--header-insertion=never' },
+        },
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -745,6 +748,7 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'codelldb',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -762,6 +766,74 @@ require('lazy').setup({
           end,
         },
       }
+    end,
+  },
+  {
+    'mfussenegger/nvim-dap',
+    dependencies = {
+      'rcarriga/nvim-dap-ui', -- Beautiful UI for debugging
+      'nvim-neotest/nvim-nio', -- Required for dap-ui
+      'williamboman/mason.nvim',
+      'jay-babu/mason-nvim-dap.nvim', -- Bridges mason and dap
+    },
+    config = function()
+      local dap = require 'dap'
+      local dapui = require 'dapui'
+
+      dapui.setup()
+
+      -- Automatically open/close UI when debugging starts/ends
+      dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+      dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+      dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+      -- Instead of calling a method on the package, we find the folder directly.
+      -- Mason always installs to your 'data' path / mason / packages.
+      local mason_path = vim.fn.stdpath 'data' .. '/mason/packages/'
+      local codelldb_path = mason_path .. 'codelldb/extension/adapter/codelldb'
+
+      -- Check if the file actually exists to avoid future errors
+      if vim.fn.executable(codelldb_path) ~= 1 then
+        vim.notify('codelldb binary not found at: ' .. codelldb_path, vim.log.levels.WARN)
+      end
+
+      dap.adapters.codelldb = {
+        type = 'server',
+        port = '${port}',
+        executable = {
+          command = codelldb_path,
+          args = { '--port', '${port}' },
+        },
+      }
+
+      -- Ensure your C++ configuration uses 'codelldb' as the type
+      dap.configurations.cpp = {
+        {
+          name = 'Launch file',
+          type = 'codelldb',
+          request = 'launch',
+          program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+          end,
+          cwd = '${workspaceFolder}',
+          stopOnEntry = false,
+          showDisassembly = 'never',
+        },
+      }
+      dap.configurations.c = dap.configurations.cpp
+
+      --  Keymaps
+      vim.keymap.set('n', '<leader>dc', dap.continue, { desc = '[D]ebug [C]ontinue (Play)' })
+      vim.keymap.set('n', '<leader>di', dap.step_into, { desc = '[D]ebug Step [I]nto' })
+      vim.keymap.set('n', '<leader>do', dap.step_over, { desc = '[D]ebug Step [O]ver' })
+      vim.keymap.set('n', '<leader>du', dap.step_out, { desc = '[D]ebug Step [U]p (Out)' })
+      vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = '[D]ebug Toggle [B]reakpoint' })
+      vim.keymap.set('n', '<leader>dB', function()
+        dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+      end, { desc = '[D]ebug Set [B]reakpoint condition' })
+      vim.keymap.set('n', '<leader>dt', dap.terminate, { desc = '[D]ebug [T]erminate' })
+      vim.keymap.set('n', '<leader>dr', dap.restart, { desc = '[D]ebug [R]estart' })
+      vim.keymap.set('n', '<leader>du', require('dapui').toggle, { desc = '[D]ebug Toggle [U]I' })
     end,
   },
 
