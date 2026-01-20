@@ -169,6 +169,10 @@ vim.o.confirm = true
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+-- Deleting/Pasting
+vim.keymap.set('x', '<leader>d', [["_d]], { desc = '[D]elete without yanking' })
+vim.keymap.set('x', '<leader>p', [["_dP]], { desc = '[P]aste without losing buffer' })
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
