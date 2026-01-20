@@ -831,7 +831,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>dc', dap.continue, { desc = '[D]ebug [C]ontinue (Play)' })
       vim.keymap.set('n', '<leader>di', dap.step_into, { desc = '[D]ebug Step [I]nto' })
       vim.keymap.set('n', '<leader>do', dap.step_over, { desc = '[D]ebug Step [O]ver' })
-      vim.keymap.set('n', '<leader>du', dap.step_out, { desc = '[D]ebug Step [U]p (Out)' })
+      vim.keymap.set('n', '<leader>dO', dap.step_out, { desc = '[D]ebug Step [O]ut' })
       vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = '[D]ebug Toggle [B]reakpoint' })
       vim.keymap.set('n', '<leader>dB', function()
         dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
