@@ -262,6 +262,7 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  'prisma/vim-prisma', -- Adds syntax highlighting for prisma files
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -720,7 +721,6 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         ts_ls = {},
         biome = {},
-        prisma_ls = {},
 
         lua_ls = {
           -- cmd = { ... },
@@ -756,6 +756,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'prettier', -- Used for formatting prisma
         'codelldb',
+        'prisma-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
