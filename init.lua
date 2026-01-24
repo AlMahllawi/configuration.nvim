@@ -181,11 +181,11 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Open terminal
-vim.keymap.set('n', '<leader>Ti', function()
+vim.keymap.set('n', '<leader>ti', function()
   vim.cmd.term()
 end, { desc = 'Open [T]erminal [I]ternally' })
 
-vim.keymap.set('n', '<leader>Te', function()
+vim.keymap.set('n', '<leader>te', function()
   local cwd = vim.fn.getcwd()
   vim.fn.jobstart({ 'kitty', '--detach', '--directory', cwd }, { detach = true })
 end, { desc = 'Open [T]erminal [E]xternally' })
@@ -361,7 +361,8 @@ require('lazy').setup({
       spec = {
         { '<leader>d', group = '[D]ebug' },
         { '<leader>s', group = '[S]earch' },
-        { '<leader>t', group = '[T]oggle' },
+        { '<leader>T', group = '[T]oggle' },
+        { '<leader>t', group = '[T]erminal' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
@@ -655,7 +656,7 @@ require('lazy').setup({
           --
           -- This may be unwanted, since they displace some of your code
           if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-            map('<leader>th', function()
+            map('<leader>Th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
           end
