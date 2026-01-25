@@ -720,8 +720,43 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        ts_ls = {},
-        biome = {},
+        ts_ls = {
+          format = false,
+        },
+        biome = {
+          format = false,
+        },
+        eslint = {
+          root_dir = function(fname)
+            if #vim.fs.find({ 'biome.json', 'biome.jsonc' }, { upward = true, path = fname }) > 0 then
+              return nil
+            end
+            local eslint_config_names = {
+              '.eslintrc.js',
+              '.eslintrc.cjs',
+              '.eslintrc.json',
+              '.eslintrc.yaml',
+              '.eslintrc.yml',
+              'eslint.config.js',
+            }
+            local root = vim.fs.find(eslint_config_names, { upward = true, path = fname })
+            if root[1] then
+              return vim.fs.dirname(root[1])
+            end
+            local pkg_json_path = vim.fs.find({ 'package.json' }, { upward = true, path = fname })[1]
+            if pkg_json_path then
+              local f = io.open(pkg_json_path, 'r')
+              if f then
+                local contents = f:read '*a'
+                f:close()
+                if contents:find '"eslintConfig"' then
+                  return vim.fs.dirname(pkg_json_path)
+                end
+              end
+            end
+            return nil
+          end,
+        },
 
         lua_ls = {
           -- cmd = { ... },
@@ -757,6 +792,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'prettier', -- Used for formatting prisma
         'codelldb',
+        'eslint',
         'prisma-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -873,7 +909,7 @@ require('lazy').setup({
       {
         '<leader>f',
         function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
+          require('conform').format { async = true, lsp_format = nil }
         end,
         mode = '',
         desc = '[F]ormat buffer',
@@ -891,13 +927,26 @@ require('lazy').setup({
         else
           return {
             timeout_ms = 500,
-            lsp_format = 'fallback',
+            lsp_format = nil,
           }
         end
       end,
+      formatters = {
+        biome = {
+          condition = function(ctx)
+            return vim.fs.find({ 'biome.json', 'biome.jsonc' }, { upward = true, path = ctx.dirname })[1]
+          end,
+        },
+      },
       formatters_by_ft = {
         lua = { 'stylua' },
         prisma = { 'prettier' },
+        javascript = { 'biome' },
+        typescript = { 'biome' },
+        javascriptreact = { 'biome' },
+        typescriptreact = { 'biome' },
+        json = { 'biome' },
+        jsonc = { 'biome' },
 
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
