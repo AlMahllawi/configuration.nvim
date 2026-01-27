@@ -915,46 +915,51 @@ require('lazy').setup({
         desc = '[F]ormat buffer',
       },
     },
-    opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        else
-          return {
-            timeout_ms = 500,
-            lsp_format = nil,
-          }
-        end
-      end,
-      formatters = {
-        biome = {
-          condition = function(ctx)
-            return vim.fs.find({ 'biome.json', 'biome.jsonc' }, { upward = true, path = ctx.dirname })[1]
-          end,
+    config = function()
+      local js_formatters = { 'biome', 'prettierd', 'prettier', 'eslint', stop_after_first = true }
+      require('conform').setup {
+        notify_on_error = false,
+        format_on_save = function(bufnr)
+          local disable_filetypes = { c = true, cpp = true }
+          if disable_filetypes[vim.bo[bufnr].filetype] then
+            return nil
+          else
+            return {
+              timeout_ms = 500,
+              lsp_format = nil,
+            }
+          end
+        end,
+        formatters = {
+          biome = {
+            condition = function(ctx)
+              return vim.fs.find({ 'biome.json', 'biome.jsonc' }, { upward = true, path = ctx.dirname })[1]
+            end,
+          },
+          prettier = {
+            condition = function(self, ctx)
+              return vim.fs.find({ '.prettierrc', '.prettierrc.json' }, { path = ctx.filename, upward = true })[1]
+            end,
+          },
         },
-      },
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        prisma = { 'prettier' },
-        javascript = { 'biome' },
-        typescript = { 'biome' },
-        javascriptreact = { 'biome' },
-        typescriptreact = { 'biome' },
-        json = { 'biome' },
-        jsonc = { 'biome' },
+        formatters_by_ft = {
+          lua = { 'stylua' },
 
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      },
-    },
+          prisma = { 'prettier' },
+
+          javascript = js_formatters,
+          typescript = js_formatters,
+
+          javascriptreact = js_formatters,
+          typescriptreact = js_formatters,
+
+          json = { 'biome' },
+          jsonc = { 'biome' },
+
+          python = { 'isort', 'black' },
+        },
+      }
+    end,
   },
 
   { -- Autocompletion
