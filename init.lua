@@ -214,10 +214,10 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
--- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
--- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
--- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
--- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
+vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
+vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
+vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -262,7 +262,7 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-  'prisma/vim-prisma', -- Adds syntax highlighting for prisma files
+  'prisma/vim-prisma',         -- Adds syntax highlighting for prisma files
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -313,7 +313,7 @@ require('lazy').setup({
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  { -- Useful plugin to show you pending keybinds.
+  {                     -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -396,7 +396,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -524,7 +524,7 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',    opts = {} },
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
@@ -789,7 +789,7 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua',   -- Used to format Lua code
         'prettier', -- Used for formatting prisma
         'codelldb',
         'eslint',
@@ -816,8 +816,8 @@ require('lazy').setup({
   {
     'mfussenegger/nvim-dap',
     dependencies = {
-      'rcarriga/nvim-dap-ui', -- Beautiful UI for debugging
-      'nvim-neotest/nvim-nio', -- Required for dap-ui
+      'rcarriga/nvim-dap-ui',         -- Beautiful UI for debugging
+      'nvim-neotest/nvim-nio',        -- Required for dap-ui
       'williamboman/mason.nvim',
       'jay-babu/mason-nvim-dap.nvim', -- Bridges mason and dap
     },
@@ -1197,7 +1197,7 @@ require('lazy').setup({
       opts = {
         -- Adjust these for faster/slower trails
         cursor_color = '#ff8800',
-        stiffness = 0.6, -- 0.1 to 1; higher is faster
+        stiffness = 0.6,               -- 0.1 to 1; higher is faster
         trailing_stiffness = 0.3,
         distance_stop_animating = 0.1, -- Minimum distance to stop animating
       },
@@ -1209,10 +1209,10 @@ require('lazy').setup({
     config = function()
       require('neoscroll').setup {
         mappings = { '<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', '<C-e>', 'zt', 'zz', 'zb' },
-        hide_cursor = true, -- Hide cursor while scrolling
-        stop_eof = true, -- Stop at end of file
+        hide_cursor = true,        -- Hide cursor while scrolling
+        stop_eof = true,           -- Stop at end of file
         respect_scrolloff = false, -- Stop scrolling when scrolloff reached
-        cursor_scroll_step = 1, -- Step size when scrolling with dot
+        cursor_scroll_step = 1,    -- Step size when scrolling with dot
       }
     end,
   },
